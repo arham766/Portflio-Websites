@@ -1,6 +1,6 @@
-// next.config.js
 const nextConfig = {
-  // Skip prerendering 404
+  images: { unoptimized: true },
+  trailingSlash: true,
   onDemandEntries: {
     maxInactiveAge: 1000,
     pagesBufferLength: 1,
