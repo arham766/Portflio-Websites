@@ -1,7 +1,10 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
+// next.config.js
+const nextConfig = {
+  // Skip prerendering 404
+  onDemandEntries: {
+    maxInactiveAge: 1000,
+    pagesBufferLength: 1,
+  },
 };
 
-export default nextConfig;
+module.exports = nextConfig;

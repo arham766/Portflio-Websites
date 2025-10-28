@@ -3,270 +3,213 @@
 import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { Mail, Github, Linkedin, Instagram, Facebook, Download } from "lucide-react";
+import {
+  Mail,
+  Github,
+  Linkedin,
+  Instagram,
+  Facebook,
+  Download,
+} from "lucide-react";
 
-const ContactSection = () => {
-  const ref = useRef(null);
+interface ContactItem {
+  icon: React.ElementType;
+  label: string;
+  value: string;
+  href: string;
+  download?: boolean;
+  aria: string;
+}
+import ClientOnly from "./ClientOnly";
+const contactItems: ContactItem[] = [
+  {
+    icon: Mail,
+    label: "Email",
+    value: "rubaiyaananya@gmail.com",
+    href: "mailto:rubaiyaananya@gmail.com",
+    aria: "Send email to rubaiyaananya@gmail.com",
+  },
+  {
+    icon: Github,
+    label: "GitHub",
+    value: "github.com/rubaiya-code",
+    href: "https://github.com/rubaiya-code",
+    aria: "Visit GitHub profile",
+  },
+  {
+    icon: Linkedin,
+    label: "LinkedIn",
+    value: "linkedin.com/in/rubaiya-binte-rahman",
+    href: "https://linkedin.com/in/rubaiya-binte-rahman",
+    aria: "Visit LinkedIn profile",
+  },
+  {
+    icon: Instagram,
+    label: "Instagram",
+    value: "instagram.com/_rubaiya_rahman__",
+    href: "https://instagram.com/_rubaiya_rahman__",
+    aria: "Visit Instagram profile",
+  },
+  {
+    icon: Facebook,
+    label: "Facebook",
+    value: "facebook.com/profile.php?id=61577648223317",
+    href: "https://facebook.com/profile.php?id=61577648223317",
+    aria: "Visit Facebook profile",
+  },
+  {
+    icon: Download,
+    label: "Resume",
+    value: "View My Resume",
+    href: "/resume.pdf",
+    download: true,
+    aria: "Download resume PDF",
+  },
+];
+
+export default function ContactSection() {
+  const ref = useRef<HTMLElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
-  const [isHovered, setIsHovered] = useState(false);
-
-  const fadeInUp = {
-    hidden: { opacity: 0, y: 40 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
-  };
-
-  const containerVariants = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
-    },
-  };
-
-  const cardVariants = {
-    hover: { scale: 1.05, rotate: 1, boxShadow: "0 10px 20px rgba(0, 0, 0, 0.1)", transition: { duration: 0.3, ease: "easeInOut" } },
-    tap: { scale: 0.98, transition: { duration: 0.2 } },
-  };
-
-  const iconVariants = {
-    hover: { scale: 1.2, rotate: 5, color: "var(--accent)" },
-    tap: { scale: 0.9 },
-  };
-
-  const gridVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 0.3,
-      transition: { duration: 1, ease: "easeOut" },
-    },
-    hover: { opacity: isHovered ? 0.5 : 0.3 },
-  };
+  const [sectionHovered, setSectionHovered] = useState(false);
 
   return (
+    <ClientOnly>
     <section
       id="contact"
       ref={ref}
       aria-label="Contact Information"
-      className="relative py-24 bg-gradient-to-b from-[var(--secondary)]/10 via-[var(--background)] to-[var(--background)] overflow-hidden"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      className="relative py-24 overflow-hidden bg-gradient-to-b from-[var(--secondary)]/5 via-[var(--background)] to-[var(--background)]"
+      onMouseEnter={() => setSectionHovered(true)}
+      onMouseLeave={() => setSectionHovered(false)}
     >
+      {/* Animated subtle grid */}
       <motion.div
-        className="absolute inset-0 pointer-events-none"
-        variants={gridVariants}
-        initial="hidden"
-        animate={isInView ? "visible" : "hidden"}
+        className="absolute inset-0 pointer-events-none opacity-0"
+        initial={{ opacity: 0 }}
+        animate={{
+          opacity: isInView ? (sectionHovered ? 0.4 : 0.25) : 0,
+        }}
+        transition={{ duration: 1, ease: "easeOut" }}
         style={{
-          background: `
-            linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px)
+          backgroundImage: `
+            linear-gradient(to right, rgba(100,100,100,.1) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(100,100,100,.1) 1px, transparent 1px)
           `,
-          backgroundSize: "20px 20px",
+          backgroundSize: "30px 30px",
+          maskImage:
+            "radial-gradient(circle at center, white 10%, transparent 70%)",
         }}
       />
 
+      {/* Radial glow */}
       <motion.div
-        className="absolute inset-0 bg-gradient-radial from-transparent to-[var(--accent)]/5 opacity-50 pointer-events-none"
+        className="absolute inset-0 pointer-events-none"
         initial={{ scale: 0, opacity: 0 }}
-        animate={isInView ? { scale: 1.5, opacity: 1 } : {}}
-        transition={{ duration: 1.5, ease: "easeOut" }}
+        animate={isInView ? { scale: 2, opacity: 0.3 } : { scale: 0, opacity: 0 }}
+        transition={{ duration: 1.8, ease: "easeOut" }}
+        style={{
+          background:
+            "radial-gradient(circle at center, var(--accent) 0%, transparent 60%)",
+        }}
       />
 
-      <div className="container relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <motion.h2
-          variants={fadeInUp}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-center text-[var(--primary)] mb-12 tracking-tight"
-          tabIndex={-1}
-        >
-          Get in Touch
-        </motion.h2>
-
-        <motion.p
-          variants={fadeInUp}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          transition={{ delay: 0.2 }}
-          className="text-center text-[var(--muted)] mb-16 max-w-2xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed"
-          role="doc-subtitle"
-        >
-          I'm always open to new opportunities and collaborations. Reach out via email or social media, or download my resume below.
-        </motion.p>
-
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-5xl mx-auto"
-          role="list"
-        >
-          <motion.div
-            variants={fadeInUp}
-            whileHover="hover"
-            whileTap="tap"
-            variants={cardVariants}
-            className="bg-[var(--card)]/60 backdrop-blur-md border border-[var(--muted)]/30 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-shadow duration-300 flex items-center gap-4 group"
-            role="listitem"
-            aria-label="Email Contact"
+      <div className="container relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Heading */}
+        <div className="text-center mb-16">
+          <motion.h2
+            initial={{ opacity: 0, y: 40 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="text-4xl sm:text-5xl md:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[var(--primary)] to-[var(--accent)] mb-4 tracking-tight"
           >
-            <motion.div
-              variants={iconVariants}
-              className="flex-shrink-0 group-hover:text-[var(--accent)] transition-colors"
-              aria-hidden="true"
-            >
-              <Mail className="w-6 h-6 text-[var(--primary)]" />
-            </motion.div>
-            <a
-              href="mailto:rubaiyaananya@gmail.com"
-              className="text-[var(--foreground)]/90 hover:text-[var(--primary)] transition-colors text-sm md:text-base truncate focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2 focus:ring-offset-[var(--background)]"
-              aria-label="Send email to rubaiyaananya@gmail.com"
-            >
-              rubaiyaananya@gmail.com
-            </a>
-          </motion.div>
+            Let's Connect
+          </motion.h2>
 
-          <motion.div
-            variants={fadeInUp}
-            whileHover="hover"
-            whileTap="tap"
-            variants={cardVariants}
-            className="bg-[var(--card)]/60 backdrop-blur-md border border-[var(--muted)]/30 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-shadow duration-300 flex items-center gap-4 group"
-            role="listitem"
-            aria-label="GitHub Profile"
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+            className="text-[var(--muted)] max-w-2xl mx-auto text-base sm:text-lg leading-relaxed"
           >
-            <motion.div
-              variants={iconVariants}
-              className="flex-shrink-0 group-hover:text-[var(--accent)] transition-colors"
-              aria-hidden="true"
-            >
-              <Github className="w-6 h-6 text-[var(--primary)]" />
-            </motion.div>
-            <NavLink
-              to="https://github.com/rubaiya-code"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[var(--foreground)]/90 hover:text-[var(--primary)] transition-colors text-sm md:text-base truncate focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2 focus:ring-offset-[var(--background)]"
-              aria-label="Visit GitHub profile at github.com/rubaiya-code"
-            >
-              github.com/rubaiya-code
-            </NavLink>
-          </motion.div>
+            Open to collaborations, opportunities, or just a chat. Feel free to
+            reach out!
+          </motion.p>
+        </div>
 
-          <motion.div
-            variants={fadeInUp}
-            whileHover="hover"
-            whileTap="tap"
-            variants={cardVariants}
-            className="bg-[var(--card)]/60 backdrop-blur-md border border-[var(--muted)]/30 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-shadow duration-300 flex items-center gap-4 group"
-            role="listitem"
-            aria-label="LinkedIn Profile"
-          >
+        {/* Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          {contactItems.map((item, idx) => (
             <motion.div
-              variants={iconVariants}
-              className="flex-shrink-0 group-hover:text-[var(--accent)] transition-colors"
-              aria-hidden="true"
+              key={idx}
+              initial={{ opacity: 0, y: 40 }}
+              animate={
+                isInView
+                  ? { opacity: 1, y: 0 }
+                  : { opacity: 0, y: 40 }
+              }
+              transition={{
+                duration: 0.6,
+                ease: "easeOut",
+                delay: 0.2 + idx * 0.1,
+              }}
+              whileHover={{
+                y: -8,
+                scale: 1.05,
+                boxShadow: "0 20px 40px rgba(0,0,0,.12)",
+              }}
+              whileTap={{ scale: 0.98 }}
+              className="group relative bg-[var(--card)]/70 backdrop-blur-xl border border-[var(--border)] rounded-2xl p-6 shadow-md transition-all duration-300 overflow-hidden"
             >
-              <Linkedin className="w-6 h-6 text-[var(--primary)]" />
-            </motion.div>
-            <NavLink
-              to="https://linkedin.com/in/rubaiya-binte-rahman"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[var(--foreground)]/90 hover:text-[var(--primary)] transition-colors text-sm md:text-base truncate focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2 focus:ring-offset-[var(--background)]"
-              aria-label="Visit LinkedIn profile at linkedin.com/in/rubaiya-binte-rahman"
-            >
-              linkedin.com/in/rubaiya-binte-rahman
-            </NavLink>
-          </motion.div>
+              {/* Hover glow */}
+              <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-          <motion.div
-            variants={fadeInUp}
-            whileHover="hover"
-            whileTap="tap"
-            variants={cardVariants}
-            className="bg-[var(--card)]/60 backdrop-blur-md border border-[var(--muted)]/30 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-shadow duration-300 flex items-center gap-4 group"
-            role="listitem"
-            aria-label="Instagram Profile"
-          >
-            <motion.div
-              variants={iconVariants}
-              className="flex-shrink-0 group-hover:text-[var(--accent)] transition-colors"
-              aria-hidden="true"
-            >
-              <Instagram className="w-6 h-6 text-[var(--primary)]" />
-            </motion.div>
-            <NavLink
-              to="https://instagram.com/_rubaiya_rahman__"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[var(--foreground)]/90 hover:text-[var(--primary)] transition-colors text-sm md:text-base truncate focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2 focus:ring-offset-[var(--background)]"
-              aria-label="Visit Instagram profile at instagram.com/_rubaiya_rahman__"
-            >
-              instagram.com/_rubaiya_rahman__
-            </NavLink>
-          </motion.div>
+              <div className="relative flex items-center gap-4 z-10">
+                <motion.div
+                  whileHover={{ scale: 1.3, rotate: 8 }}
+                  className="flex-shrink-0 p-3 rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] group-hover:bg-[var(--accent)] group-hover:text-white transition-all duration-300"
+                >
+                  <item.icon className="w-6 h-6" />
+                </motion.div>
 
-          <motion.div
-            variants={fadeInUp}
-            whileHover="hover"
-            whileTap="tap"
-            variants={cardVariants}
-            className="bg-[var(--card)]/60 backdrop-blur-md border border-[var(--muted)]/30 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-shadow duration-300 flex items-center gap-4 group"
-            role="listitem"
-            aria-label="Facebook Profile"
-          >
-            <motion.div
-              variants={iconVariants}
-              className="flex-shrink-0 group-hover:text-[var(--accent)] transition-colors"
-              aria-hidden="true"
-            >
-              <Facebook className="w-6 h-6 text-[var(--primary)]" />
-            </motion.div>
-            <NavLink
-              to="https://facebook.com/profile.php?id=61577648223317"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[var(--foreground)]/90 hover:text-[var(--primary)] transition-colors text-sm md:text-base truncate focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2 focus:ring-offset-[var(--background)]"
-              aria-label="Visit Facebook profile at facebook.com/profile.php?id=61577648223317"
-            >
-              facebook.com/profile.php?id=61577648223317
-            </NavLink>
-          </motion.div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-medium text-[var(--muted)] uppercase tracking-wider">
+                    {item.label}
+                  </p>
 
-          <motion.div
-            variants={fadeInUp}
-            whileHover="hover"
-            whileTap="tap"
-            variants={cardVariants}
-            className="bg-[var(--card)]/60 backdrop-blur-md border border-[var(--muted)]/30 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-shadow duration-300 flex items-center gap-4 group"
-            role="listitem"
-            aria-label="Download Resume"
-          >
-            <motion.div
-              variants={iconVariants}
-              className="flex-shrink-0 group-hover:text-[var(--accent)] transition-colors"
-              aria-hidden="true"
-            >
-              <Download className="w-6 h-6 text-[var(--primary)]" />
+                  {item.href.startsWith("mailto:") || item.href.startsWith("http") ? (
+                    <a
+                      href={item.href}
+                      target={item.download ? undefined : "_blank"}
+                      rel={item.download ? undefined : "noopener noreferrer"}
+                      download={item.download ? "Rubaiya_Resume.pdf" : undefined}
+                      className="block mt-1 text-[var(--foreground)] hover:text-[var(--primary)] font-medium text-sm md:text-base truncate transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent rounded"
+                      aria-label={item.aria}
+                    >
+                      {item.value}
+                      {item.download && (
+                        <span className="block text-xs text-[var(--muted)] mt-1">
+                          (Click to download)
+                        </span>
+                      )}
+                    </a>
+                  ) : (
+                    <NavLink
+                      to={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block mt-1 text-[var(--foreground)] hover:text-[var(--primary)] font-medium text-sm md:text-base truncate transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent rounded"
+                      aria-label={item.aria}
+                    >
+                      {item.value}
+                    </NavLink>
+                  )}
+                </div>
+              </div>
             </motion.div>
-            <a
-              href="/resume.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[var(--foreground)]/90 hover:text-[var(--primary)] transition-colors flex items-center gap-2 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2 focus:ring-offset-[var(--background)]"
-              aria-label="Download resume PDF"
-            >
-              View My Resume
-              <span className="text-xs text-[var(--muted)]">(Download)</span>
-            </a>
-          </motion.div>
-        </motion.div>
+          ))}
+        </div>
       </div>
     </section>
+    </ClientOnly>
   );
-};
-
-export default ContactSection;
+}

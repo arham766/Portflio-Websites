@@ -1,15 +1,26 @@
+"use client";
+
 import { ButtonHTMLAttributes } from "react";
 import { motion } from "framer-motion";
-import { cn } from "@/lib/utils"; // optional helper if you have one
+import { cn } from "@/lib/utils";
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps
+  extends Omit<
+    ButtonHTMLAttributes<HTMLButtonElement>,
+    | "onDrag"
+    | "onDragStart"
+    | "onDragEnd"
+    | "onDragOver"
+    | "onDragEnter"
+    | "onDragLeave"
+    | "onDrop"
+    | "onAnimationStart"
+    | "onAnimationComplete"
+  > {
   variant?: "primary" | "secondary";
   className?: string;
 }
 
-/**
- * Simple, theme-aware animated button component
- */
 export function Button({
   children,
   variant = "primary",
