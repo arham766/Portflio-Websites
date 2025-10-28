@@ -260,7 +260,7 @@ export function HeroSection() {
             >
               About Me
             </Button>
-            <Link href="/painting">
+            <Link href="/art">
               <Button variant="secondary" className="border border-[var(--accent)] hover:bg-[var(--accent)]/10">
                 My Work →
               </Button>
